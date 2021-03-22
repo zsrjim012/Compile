@@ -191,7 +191,7 @@ jobs:
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
-        name: Bin_filename+ipk_${{ env.NAME2 }}_${{ env.NAME1 }}_${{ env.date }}
+        name: Bin_filename_ipk_${{ env.NAME2 }}_${{ env.NAME1 }}_${{ env.date }}
         path: openwrt/bin
     
     - name: 整理固件
