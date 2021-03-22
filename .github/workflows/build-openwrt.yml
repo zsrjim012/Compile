@@ -43,7 +43,7 @@ jobs:
     - name: 准备结束
       uses: actions/checkout@v2
     
-    - name: 检测脚本设置
+    - name: 运行settings.ini
       run: |
         source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV
@@ -72,7 +72,7 @@ jobs:
         text: 主人${{matrix.target}}编译开始啦
         desp: 主人您要编译的[${{matrix.target}}]固件正在努力耕耘中(${CangKu}仓库的#${Run_number}号),请耐心等待......
      
-    - name: 设置编译环境
+    - name: 设置系统
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
@@ -86,7 +86,7 @@ jobs:
         sudo mkdir -p /workdir
         sudo chown $USER:$GROUPS /workdir
     
-    - name: 下载"${{matrix.target}}"源码
+    - name: 下载源码
       working-directory: /workdir
       run: |
         git clone -b "$REPO_BRANCH" --single-branch "$REPO_URL" "openwrt"
@@ -95,7 +95,7 @@ jobs:
         echo "PATH1=${GITHUB_WORKSPACE}/openwrt/build/${{matrix.target}}" >> $GITHUB_ENV
         echo "artifact=${GITHUB_WORKSPACE}/openwrt/bin/Firmware" >> $GITHUB_ENV
     
-    - name: 调整脚本文件
+    - name: 整理脚本
       run: |
         cp -Rf `find ./ -maxdepth 1 -type d ! -path './openwrt' ! -path './'` openwrt
         cp -Rf "${GITHUB_WORKSPACE}/build/common"/*.sh "${PATH1}"
@@ -106,7 +106,7 @@ jobs:
           echo "SSHYC=true" >> $GITHUB_ENV
         fi
 
-    - name: 加载源,patch补丁和自定义设置
+    - name: 加载设置
       run: |
         cd openwrt
         source "${PATH1}/common.sh" && Diy_all
@@ -151,14 +151,14 @@ jobs:
           source "${PATH1}/upgrade.sh" && Diy_Part1
         fi
     
-    - name: SSH远程连接（若打开了此功能,在此转圈2分钟还展开不了,请看《SSH连接教程》）
+    - name: SSH远程
       uses: 281677160/debugger-action@master
       if: env.SSH_ACTIONS == 'true' || (github.event.inputs.ssh == 'ssh' && github.event.inputs.ssh  != 'false')
       env:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
     
-    - name: 下载软件包
+    - name: 下载DLL
       id: package
       run: |
         cd openwrt
@@ -170,7 +170,7 @@ jobs:
           source "${PATH1}/upgrade.sh" && Diy_Part2
         fi
 
-    - name: 开始编译固件
+    - name: 开始编译
       id: compile
       run: |
         cd openwrt
@@ -190,14 +190,14 @@ jobs:
          [ -s NAME1 ] && echo "NAME1=$(cat NAME1)" >> $GITHUB_ENV
         fi
 
-    - name: 上传bin文件夹(固件+ipk)在github actions
+    - name: 上传bin文件夹
       uses: actions/upload-artifact@v2
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_BIN_DIR == 'true'
       with:
         name: Bin_filename+ipk_${{ env.NAME2 }}_${{ env.NAME1 }}_${{ env.date }}
         path: openwrt/bin
 
-    - name: 编译N1机型时,打包（N1、微加云、贝壳云、我家云、S9xxx）固件
+    - name: 打包N1固件
       run: |
         cd openwrt
         if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
@@ -219,7 +219,7 @@ jobs:
            mv -f reform/out/*/*.img.gz openwrt/bin/targets/armvirt/*
         fi
     
-    - name: 整理固件文件夹
+    - name: 整理固件
       id: organizer
       run: |
         cd openwrt
@@ -243,14 +243,14 @@ jobs:
         echo "BOT=TRUE" >> $GITHUB_ENV
         echo "::set-output name=status::success"
     
-    - name: 上传.config配置文件在github actions
+    - name: 上传.config
       uses: actions/upload-artifact@v2
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_CONFIG == 'true'
       with:
         name: .config_${{ env.NAME2 }}_${{ env.NAME1 }}_${{ env.date }}
         path: openwrt/bin/config
 
-    - name: 上传固件在github actions
+    - name: 上传固件
       uses: actions/upload-artifact@v2
       if: steps.organizer.outputs.status == 'success' && env.UPLOAD_FIRMWARE == 'true'
       with:
