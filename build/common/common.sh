@@ -152,18 +152,3 @@ rm -rf ${Home}/build/QUEWENJIANerros
 exit 1
 fi
 }
-
-
-################################################################################################################
-# N1、微加云、贝壳云、我家云、S9xxx 打包程序
-
-Diy_n1() {
-DIY_GET_COMMON_SH
-cd ../
-svn co https://github.com/281677160/N1/trunk reform
-cp openwrt/bin/targets/armvirt/*/*.tar.gz reform/openwrt
-cd reform
-sudo ./gen_openwrt -d -k latest
-         
-devices=("phicomm-n1" "rk3328" "s9xxx" "vplus")
-}
