@@ -196,28 +196,6 @@ jobs:
       with:
         name: Bin_filename+ipk_${{ env.NAME2 }}_${{ env.NAME1 }}_${{ env.date }}
         path: openwrt/bin
-
-    - name: 打包N1固件
-      run: |
-        cd openwrt
-        if [[ ${{matrix.target}} =~ (Lede_phicomm_n1|Project_phicomm_n1) ]]; then
-          svn co https://github.com/281677160/N1/trunk reform
-          cp openwrt/bin/targets/armvirt/*/*.tar.gz reform/openwrt
-          cd reform
-          sudo ./gen_openwrt -d -k latest
-         
-          devices=("phicomm-n1" "rk3328" "s9xxx" "vplus")
-         cd out
-         for x in ${devices[*]}; do
-           cd $x
-           filename=$(ls | awk -F '.img' '{print $1}')
-           gzip *.img
-           cd ../
-           echo "firmware_$x=$filename" >> $GITHUB_ENV
-         done
-           cd ../../
-           mv -f reform/out/*/*.img.gz openwrt/bin/targets/armvirt/*
-        fi
     
     - name: 整理固件
       id: organizer
@@ -266,7 +244,7 @@ jobs:
         ./transfer wet -s -p 16 --no-progress ${FIRMWARE} 2>&1 | tee wetransfer.log
         echo "::warning file=wetransfer.com::$(cat wetransfer.log | grep https)"
 
-    - name: 把定时更新固件发布到云端
+    - name: 定时更新地址
       uses: softprops/action-gh-release@v1
       if: steps.organizer.outputs.status == 'success' && env.REGULAR_UPDATE == 'true'
       env:
