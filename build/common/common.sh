@@ -177,24 +177,3 @@ sudo ./gen_openwrt -d -k latest
          
 devices=("phicomm-n1" "rk3328" "s9xxx" "vplus")
 }
-
-
-################################################################################################################
-# 公告
-
-Diy_notice() {
-echo ""
-echo "	《公告内容》"
-echo " 3月21号新通知： luci-app-autopoweroff 改名成 luci-app-autotimeset 增加定时重启网络,有用这插件的注意了"
-echo " 3月13号中午12点正更新：重新排版了信息显示，修复了一小BUG，请大家复制最新的build-openwrt.yml文件内容粘贴到你的build-openwrt.yml上"
-echo " 3月11号早上11点增加了所选插件信息,如果使用的是3月9号最新版有需要的请复制最新的build-openwrt.yml文件内容粘贴到你的build-openwrt.yml上"
-echo " 请大家使用3月9号最新版仓库编译"
-echo " 把定时更新固件升级到5.2版本"
-echo " x86-64、phicomm-k3、newifi-d2、phicomm_k2p自动适配固件名字跟后缀,无需设置"
-echo " 优化了脚本,最新版修复了AdGuardHome权限问题不能启动"
-echo " x86-64跟R2S编译AdGuardHome自动增加核心,免除下载"
-echo " 没使用3月9号最新版本的会在加载源那里就出错了，请大家注意"
-echo " [Telegram交流群] https://t.me/joinchat/AAAAAE3eOMwEHysw9HMcVQ"
-echo " 脚本地址：https://github.com/281677160/build-openwrt"
-echo ""
-}
