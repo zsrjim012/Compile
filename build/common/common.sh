@@ -31,14 +31,7 @@ if [[ `grep -c "# CONFIG_PACKAGE_ddnsto is not set" "${PATH1}/${CONFIG_FILE}"` -
 sed -i '/CONFIG_PACKAGE_ddnsto/d' "${PATH1}/${CONFIG_FILE}" > /dev/null 2>&1
 echo -e "\nCONFIG_PACKAGE_ddnsto=y" >> "${PATH1}/${CONFIG_FILE}"
 fi
-git clone https://github.com/kongfl888/po2lmo
-pushd po2lmo
-make && sudo make install
-popd
-rm -rf {LICENSE,README,README.md,CONTRIBUTED.md,README_EN.md}
-rm -rf ./*/{LICENSE,README,README.md}
-rm -rf ./*/*/{LICENSE,README,README.md}
-rm -rf ./*/*/*/{LICENSE,README,README.md}
+
 }
 
 
