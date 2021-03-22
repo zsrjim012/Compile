@@ -102,9 +102,6 @@ jobs:
         chmod -R +x "${PATH1}"
         source "${PATH1}/common.sh" && Diy_settings
         rm -rf {build,README.md}
-        if [[ "${{ github.event.inputs.ssh }}" == 'ssh' ]]; then
-          echo "SSHYC=true" >> $GITHUB_ENV
-        fi
 
     - name: 加载设置
       run: |
