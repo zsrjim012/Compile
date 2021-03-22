@@ -43,7 +43,7 @@ jobs:
     - name: 准备结束
       uses: actions/checkout@v2
     
-    - name: 运行settings.ini
+    - name: 读取配置
       run: |
         source "${GITHUB_WORKSPACE}/build/${{matrix.target}}/settings.ini"
         echo "Modelfile=${{matrix.target}}" >> $GITHUB_ENV
